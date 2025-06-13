@@ -34,3 +34,5 @@ cd c2c-crypto-exchange
 ```
 npm install
 ```
+
+### 5️⃣ ติดตั้ง Dependencies
