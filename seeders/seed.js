@@ -1,4 +1,6 @@
 const axios = require('axios');
+const { table } = require('table');
+const db = require('../models');
 const baseURL = 'http://localhost:3000/api';
 
 async function seed() {
@@ -19,23 +21,8 @@ async function seed() {
         for (const user of users) {
             await axios.post(`${baseURL}/wallets`, { user_id: user.id, crypto_symbol: 'BTC', balance: 1.5 });
             await axios.post(`${baseURL}/wallets`, { user_id: user.id, crypto_symbol: 'ETH', balance: 3.0 });
-
-            await axios.post(`${baseURL}/wallets`, { user_id: user.id, crypto_symbol: 'THB', balance: 0 });
-            await axios.post(`${baseURL}/wallets`, { user_id: user.id, crypto_symbol: 'USD', balance: 0 });
         }
-        console.log('Wallets created (crypto + fiat)');
-
-        await axios.post(`${baseURL}/fiat-transactions/deposit`, {
-            user_id: users[0].id,
-            fiat_currency: 'THB',
-            amount: 50000,
-        });
-        await axios.post(`${baseURL}/fiat-transactions/deposit`, {
-            user_id: users[1].id,
-            fiat_currency: 'USD',
-            amount: 1000,
-        });
-        console.log('Fiat deposits done');
+        console.log('Wallets created');
 
         const ordersData = [
             { user_id: users[0].id, order_type: 'buy', crypto_symbol: 'BTC', amount: 0.7, price_per_unit: 1500000, status: 'open' },
@@ -83,17 +70,7 @@ async function seed() {
                     counterparty_address: buyerWallet.address,
                     created_at: new Date(),
                 });
-                console.log('Crypto internal transaction created:', cryptoTxRes.data);
-
-                const externalTxRes = await axios.post(`${baseURL}/crypto-transactions`, {
-                    wallet_id: sellerWallet.id,
-                    type: 'external',
-                    crypto_symbol: completedSell.crypto_symbol,
-                    amount: 0.1,
-                    counterparty_address: 'external-wallet-address-xyz',
-                    created_at: new Date(),
-                });
-                console.log('Crypto external transaction created:', externalTxRes.data);
+                console.log('Crypto transaction created:', cryptoTxRes.data);
             }
 
             const fiatAmount = completedBuy.amount * completedBuy.price_per_unit;
@@ -120,8 +97,28 @@ async function seed() {
         }
 
         console.log('Seed via HTTP requests completed successfully!');
+
+        await displayTables();
+
     } catch (err) {
         console.error('Seed failed:', err.response?.data || err.message);
+    }
+}
+
+async function displayTables() {
+    const models = ['User', 'Wallet', 'Order', 'OrderMatch', 'FiatTransaction', 'CryptoTransaction'];
+
+    for (const modelName of models) {
+        const records = await db[modelName].findAll({ raw: true });
+        console.log(`\n=== ${modelName} ===`);
+        if (records.length === 0) {
+            console.log('(No records)');
+            continue;
+        }
+
+        const headers = Object.keys(records[0]);
+        const rows = records.map(r => Object.values(r));
+        console.log(table([headers, ...rows]));
     }
 }
 
