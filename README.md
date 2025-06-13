@@ -24,15 +24,26 @@
 - สร้างฐานข้อมูลใหม่ชื่อ: `c2c_exchange`
 
 ### 3️⃣ Clone Project
-
+- เปิด Terminal ขึ้นมา
 ```bash
 git clone https://github.com/MAIPKGIT/c2c_exchange_test.git
-cd c2c-crypto-exchange
 ```
 
 ### 4️⃣ ติดตั้ง Dependencies
 ```
+cd c2c_exchange_test
 npm install
 ```
 
-### 5️⃣ ติดตั้ง Dependencies
+### 5️⃣ Run App
+```
+node app.js
+```
+
+### 6️⃣ Test Seed
+- New Terminal ขึ้นมา
+```
+cd c2c_exchange_test
+node seeders/seed.js
+```
+![image](https://github.com/user-attachments/assets/6e306e83-dad4-456b-8208-ae19d6e26941)
