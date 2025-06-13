@@ -7,7 +7,7 @@
 - phpMyAdmin
 
 # Tech Stack
-- - **Backend:** Node.js + Express
+- **Backend:** Node.js + Express
 - **ORM:** Sequelize
 - **Database:** MySQL (ผ่าน XAMPP/phpMyAdmin)
 - **Tool:** Postman, Table Logging, Axios
@@ -28,5 +28,9 @@
 ```bash
 git clone https://github.com/your-username/c2c-crypto-exchange.git
 cd c2c-crypto-exchange
+```
 
 ### 4️⃣ ติดตั้ง Dependencies
+```
+npm install
+```
