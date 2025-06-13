@@ -26,7 +26,7 @@
 ### 3️⃣ Clone Project
 
 ```bash
-git clone https://github.com/your-username/c2c-crypto-exchange.git
+git clone https://github.com/MAIPKGIT/c2c_exchange_test.git
 cd c2c-crypto-exchange
 ```
 
