@@ -1,0 +1,83 @@
+@startuml
+
+entity "User" as User {
+    * id : INTEGER
+    --
+    username : STRING
+    email : STRING
+    password_hash : STRING
+    phone_number : STRING
+    created_at : DATETIME
+    updated_at : DATETIME
+}
+
+entity "Wallet" as Wallet {
+    * id : INTEGER
+    --
+    user_id : INTEGER
+    crypto_symbol : STRING
+    balance : DECIMAL
+    address : STRING
+    created_at : DATETIME
+    updated_at : DATETIME
+}
+
+entity "Order" as Order {
+    * id : INTEGER
+    --
+    user_id : INTEGER
+    order_type : ENUM('buy', 'sell')
+    crypto_symbol : STRING
+    amount : DECIMAL
+    price_per_unit : DECIMAL
+    status : ENUM('open', 'completed', 'cancelled')
+    created_at : DATETIME
+    updated_at : DATETIME
+}
+
+entity "OrderMatch" as OrderMatch {
+    * id : INTEGER
+    --
+    buy_order_id : INTEGER
+    sell_order_id : INTEGER
+    crypto_symbol : STRING
+    amount : DECIMAL
+    price_per_unit : DECIMAL
+    matched_at : DATETIME
+    created_at : DATETIME
+    updated_at : DATETIME
+}
+
+entity "FiatTransaction" as FiatTransaction {
+    * id : INTEGER
+    --
+    user_id : INTEGER
+    fiat_currency : STRING
+    amount : DECIMAL
+    type : ENUM('deposit', 'withdraw')
+    status : ENUM('pending', 'completed', 'failed')
+    created_at : DATETIME
+    updated_at : DATETIME
+}
+
+entity "CryptoTransaction" as CryptoTransaction {
+    * id : INTEGER
+    --
+    wallet_id : INTEGER
+    type : ENUM('internal', 'external')
+    crypto_symbol : STRING
+    amount : DECIMAL
+    counterparty_address : STRING
+    status : ENUM('pending', 'completed', 'failed')
+    created_at : DATETIME
+    updated_at : DATETIME
+}
+
+User ||--o{ Wallet : owns >
+User ||--o{ Order : places >
+User ||--o{ FiatTransaction : has >
+Wallet ||--o{ CryptoTransaction : logs >
+Order ||--o{ OrderMatch : asBuy >
+Order ||--o{ OrderMatch : asSell >
+
+@enduml
